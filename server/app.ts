@@ -9,7 +9,7 @@ import courseRouter from './routes/course.routes';
 import notificationRoute from './routes/notification.routes';
 import orderRouter from './routes/order.routes';
 import analyticsRouter from './routes/analytics.route';
-
+import layoutRouter from './routes/layout.routes';
 
 app.use(express.json({limit: '50mb'}));
 
@@ -24,6 +24,7 @@ app.use('/api/v1/',courseRouter);
 app.use('/api/v1/',notificationRoute);
 app.use('/api/v1/',orderRouter)
 app.use('/api/v1/',analyticsRouter)
+app.use('/api/v1/',layoutRouter)
 
 
 app.get('/test', (req:Request, res:Response,next:NextFunction) => {
