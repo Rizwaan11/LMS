@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { catchAsyncError } from "../middleware/catchAsyncError";
 import ErrorHandler from "../utils/ErrorHandler";
 import cloudinary from 'cloudinary';
-import { createCourse } from "../services/course.service";
+import { createCourse, getAllCoursesService } from "../services/course.service";
 import { redis } from "../utils/redis";
 import CourseModel from "../models/course.model";
 import NotificationModel from "../models/notification.model";
@@ -265,7 +265,7 @@ export const addAnwser = catchAsyncError(
       }
 
       const question = couseContent?.questions?.find((item: any) =>
-        item._id.equals(questionId)
+        item._id.equals(questionId) 
       );
 
       if (!question) {
@@ -281,8 +281,12 @@ export const addAnwser = catchAsyncError(
       };
 
       // add this answer to our course content
+      if (!question.questionReplies) {
+        question.questionReplies = [];
+      }
       question.questionReplies.push(newAnswer);
 
+      
       await course?.save();
 
       if (req.user?._id === question.user._id) {
@@ -448,3 +452,67 @@ export const addReplyToReview = catchAsyncError(
   }
 );
 
+
+
+
+// get all courses --- only for admin
+export const getAdminAllCourses = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllCoursesService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// Delete Course --- only for admin
+export const deleteCourse = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+
+      const course = await CourseModel.findById(id);
+
+      if (!course) {
+        return next(new ErrorHandler("course not found", 404));
+      }
+
+      await course.deleteOne({ id });
+
+      await redis.del(id);
+
+      res.status(200).json({
+        success: true,
+        message: "course deleted successfully",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// generate video url
+// export const generateVideoUrl = catchAsyncError(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const { videoId } = req.body;
+//       const response = await axios.post(
+//         `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+//         { ttl: 300 },
+//         {
+//           headers: {
+//             Accept: "application/json",
+//             "Content-Type": "application/json",
+//             Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
+//           },
+//         }
+//       );
+//       res.json(response.data);
+//     } catch (error: any) {
+//       return next(new ErrorHandler(error.message, 400));
+//     }
+//   }
+// );
+
+export const generateVideoUrl = catchAsyncError(async(req , res , next)=>{})

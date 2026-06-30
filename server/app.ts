@@ -7,6 +7,8 @@ import { errorMiddleware } from './middleware/error';
 import userRouter from './routes/user.routes';
 import courseRouter from './routes/course.routes';
 import notificationRoute from './routes/notification.routes';
+import orderRouter from './routes/order.routes';
+import analyticsRouter from './routes/analytics.route';
 
 
 app.use(express.json({limit: '50mb'}));
@@ -20,6 +22,8 @@ app.use(cors({
 app.use('/api/v1/',userRouter);
 app.use('/api/v1/',courseRouter);
 app.use('/api/v1/',notificationRoute);
+app.use('/api/v1/',orderRouter)
+app.use('/api/v1/',analyticsRouter)
 
 
 app.get('/test', (req:Request, res:Response,next:NextFunction) => {
@@ -34,3 +38,6 @@ app.all('*', (req:Request, res:Response,next:NextFunction) => {
 
 
 app.use(errorMiddleware);
+
+
+

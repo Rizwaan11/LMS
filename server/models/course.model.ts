@@ -32,7 +32,7 @@ interface ICourseData extends Document {
     questions: IComment[];
 }
 
-interface ICourse extends Document {
+ export interface ICourse extends Document {
     name: string;
     description: string;
     price: number;
@@ -135,7 +135,7 @@ const courseSchema = new Schema<ICourse>({
         type: Number,
         default: 0,
     },
-});
+},{timestamps:true});
 
 const CourseModel: Model<ICourse> = mongoose.model<ICourse>("Course", courseSchema);
 
