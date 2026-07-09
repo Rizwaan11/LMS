@@ -3,7 +3,7 @@ import { activateUser, getUserInfo, loginUser, logoutUser, registerationUser, so
 import { authorizeRoles, isAuthenticated } from '../middleware/auth';
 const userRouter = express.Router();
 
-userRouter.post('/registeration', registerationUser);
+userRouter.post('/registration', registerationUser);
 userRouter.post('/activate-user', activateUser);
 userRouter.post('/login', loginUser);
 userRouter.get('/logout', logoutUser);
