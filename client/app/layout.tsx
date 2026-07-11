@@ -38,9 +38,9 @@ export default function RootLayout({
         <Providers>
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              {/* <Custom> */}
+              <Custom>
                 <div>{children}</div>
-              {/* </Custom> */}
+              </Custom>
               <Toaster position="top-center" reverseOrder={false} />
             </ThemeProvider>
           </SessionProvider>
@@ -49,3 +49,10 @@ export default function RootLayout({
     </html>
   );
 }
+
+
+const Custom: FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isLoading } = useLoadUserQuery({});
+
+  return <>{isLoading ? <Loader /> : <div>{children}</div>}</>;
+};
